@@ -1,0 +1,141 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf210
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 ArialMT;\f2\froman\fcharset0 Times-Roman;
+}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww18020\viewh13880\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 Twitter Drill Views\
+\
+\
+\pard\pardeftab720\sl340
+
+\f1\fs30 \cf0 Base View:
+\f2\fs24 \
+\pard\pardeftab720
+\cf0 \
+\pard\pardeftab720\sl340
+
+\f1\fs30 \cf0 select CAST(t.`id` as BIGINT) as `id`, 
+\f2\fs24 \
+
+\f1\fs30 CAST(t.`timestamp_ms` as BIGINT) as `timestamp`, FROM_UNIXTIME(CAST(t.`timestamp_ms` as BIGINT)/1000, 'Y-MM-D') as `date`, FROM_UNIXTIME(CAST(t.`timestamp_ms` as BIGINT)/1000, 'H:m:s') as `time`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.`text` as VARCHAR(140)) as `tweet`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.`favorite_count` as INT) as `favorite_count`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.`retweet_count` as INT) as `retweet_count`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.`source` as VARCHAR(140)) as `source`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.`lang` as VARCHAR(10)) as `language`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.`user`.`id` as BIGINT) as `user_id`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.`user`.`name` as VARCHAR(40)) as `username`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.`user`.`screen_name` as VARCHAR(40)) as `screen_name`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.`user`.`location` as VARCHAR(80)) as `user_location`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.`user`.`followers_count` as INT) as `followers_count`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.`user`.`favorites_count` as INT) as `favorites_count`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.`user`.`friends_count` as INT) as `friends_count`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.`user`.`statuses_count` as INT) as `statuses_count`
+\f2\fs24 \
+\pard\pardeftab720
+
+\f1\fs30 \cf0 from <dfs.source.for.twitter.json.files> t;\
+\
+\
+\pard\pardeftab720\sl340
+\cf0 Hashtag view (Use flatten to filter out record with no hashtag array)
+\f2\fs24 \
+\pard\pardeftab720
+\cf0 \
+\pard\pardeftab720\sl340
+
+\f1\fs30 \cf0 select CAST(tmp.`id` as BIGINT) as `id`, 
+\f2\fs24 \
+
+\f1\fs30 CAST(tmp.hash.text as VARCHAR(40)) as hashtag
+\f2\fs24 \
+\pard\pardeftab720
+
+\f1\fs30 \cf0 from (select t.id, flatten(t.entities.hashtags) as hash \
+from <dfs.source.for.twitter.json.files> t;\
+\
+\
+\pard\pardeftab720\sl340
+\cf0 Retweeted tweets (see the predicate on the main tweet status to filter out record with no array for retweets)
+\f2\fs24 \
+\pard\pardeftab720
+\cf0 \
+\pard\pardeftab720\sl340
+
+\f1\fs30 \cf0 select CAST(t.retweeted_status.`id` as BIGINT) as `id`, 
+\f2\fs24 \
+
+\f1\fs30 CAST(t.retweeted_status.`created_at` as VARCHAR(140)) as `created_at`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.retweeted_status.`text` as VARCHAR(140)) as `tweet`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.retweeted_status.`favorite_count` as INT) as `favorite_count`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.retweeted_status.`retweet_count` as INT) as `retweet_count`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.retweeted_status.`source` as VARCHAR(140)) as `source`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.retweeted_status.`lang` as VARCHAR(10)) as `language`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.retweeted_status.`user`.`id` as BIGINT) as `user_id`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.retweeted_status.`user`.`name` as VARCHAR(40)) as `username`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.retweeted_status.`user`.`screen_name` as VARCHAR(40)) as `screen_name`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.retweeted_status.`user`.`location` as VARCHAR(80)) as `user_location`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.retweeted_status.`user`.`followers_count` as INT) as `followers_count`,
+\f2\fs24 \
+
+\f1\fs30 CAST(t.retweeted_status.`user`.`favorites_count` as INT) as `favorites_count`
+\f2\fs24 \
+\pard\pardeftab720
+
+\f1\fs30 \cf0 from <dfs.source.for.twitter.json.files> like '%RT_@%';\
+\
+\
+\
+\
+\
+\
+\
+}
