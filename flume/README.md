@@ -2,6 +2,7 @@
 
 Compiled from various samples using twitter classes to use as source and filter data based on keywords
 
+
 Tested with Flume 1.5 on MapR 4.0.1
 
 Installation and use:
@@ -10,6 +11,7 @@ Installation and use:
 (Note: This package already contains a twitter source for the 1% feed and provides the sink in avro format, not json, and also doesn’t have any keyword filter options)
 
 2) Copy flume-sources-twitter-json-0.1.jar from github target to <FLUME_HOME>/lib directory
+
 (wget https://github.com/abengelbrecht/drill-twitter/blob/master/flume/target/flume-sources-twitter-json-0.1.jar)
 
 3) See these steps to create a twitter app and get the relevant tokens to use for the twitter flume source configuration (http://iag.me/socialmedia/how-to-create-a-twitter-app-in-8-easy-steps/)
