@@ -26,7 +26,7 @@ Hashtag view (Use flatten to filter out record with no hashtag array)
 select CAST(tmp.`id` as BIGINT) as `id`, 
 CAST(tmp.hash.text as VARCHAR(40)) as hashtag
 from (select t.id, flatten(t.entities.hashtags) as hash 
-from <dfs.source.for.twitter.json.files> t;
+from <dfs.source.for.twitter.json.files> t) as tmp;
 
 
 Retweeted tweets (see the predicate on the main tweet status to filter out record with no array for retweets)
