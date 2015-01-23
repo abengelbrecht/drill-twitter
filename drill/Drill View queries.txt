@@ -1,0 +1,49 @@
+Twitter Drill Views
+
+
+Base View:
+
+select CAST(t.`id` as BIGINT) as `id`, 
+CAST(t.`timestamp_ms` as BIGINT) as `timestamp`, FROM_UNIXTIME(CAST(t.`timestamp_ms` as BIGINT)/1000, 'Y-MM-D') as `date`, FROM_UNIXTIME(CAST(t.`timestamp_ms` as BIGINT)/1000, 'H:m:s') as `time`,
+CAST(t.`text` as VARCHAR(140)) as `tweet`,
+CAST(t.`favorite_count` as INT) as `favorite_count`,
+CAST(t.`retweet_count` as INT) as `retweet_count`,
+CAST(t.`source` as VARCHAR(140)) as `source`,
+CAST(t.`lang` as VARCHAR(10)) as `language`,
+CAST(t.`user`.`id` as BIGINT) as `user_id`,
+CAST(t.`user`.`name` as VARCHAR(40)) as `username`,
+CAST(t.`user`.`screen_name` as VARCHAR(40)) as `screen_name`,
+CAST(t.`user`.`location` as VARCHAR(80)) as `user_location`,
+CAST(t.`user`.`followers_count` as INT) as `followers_count`,
+CAST(t.`user`.`favorites_count` as INT) as `favorites_count`,
+CAST(t.`user`.`friends_count` as INT) as `friends_count`,
+CAST(t.`user`.`statuses_count` as INT) as `statuses_count`
+from <dfs.source.for.twitter.json.files> t;
+
+
+Hashtag view (Use flatten to filter out record with no hashtag array)
+
+select CAST(tmp.`id` as BIGINT) as `id`, 
+CAST(tmp.hash.text as VARCHAR(40)) as hashtag
+from (select t.id, flatten(t.entities.hashtags) as hash 
+from <dfs.source.for.twitter.json.files> t;
+
+
+Retweeted tweets (see the predicate on the main tweet status to filter out record with no array for retweets)
+
+select CAST(t.retweeted_status.`id` as BIGINT) as `id`, 
+CAST(t.retweeted_status.`created_at` as VARCHAR(140)) as `created_at`,
+CAST(t.retweeted_status.`text` as VARCHAR(140)) as `tweet`,
+CAST(t.retweeted_status.`favorite_count` as INT) as `favorite_count`,
+CAST(t.retweeted_status.`retweet_count` as INT) as `retweet_count`,
+CAST(t.retweeted_status.`source` as VARCHAR(140)) as `source`,
+CAST(t.retweeted_status.`lang` as VARCHAR(10)) as `language`,
+CAST(t.retweeted_status.`user`.`id` as BIGINT) as `user_id`,
+CAST(t.retweeted_status.`user`.`name` as VARCHAR(40)) as `username`,
+CAST(t.retweeted_status.`user`.`screen_name` as VARCHAR(40)) as `screen_name`,
+CAST(t.retweeted_status.`user`.`location` as VARCHAR(80)) as `user_location`,
+CAST(t.retweeted_status.`user`.`followers_count` as INT) as `followers_count`,
+CAST(t.retweeted_status.`user`.`favorites_count` as INT) as `favorites_count`
+from <dfs.source.for.twitter.json.files> like '%RT_@%';
+
+
