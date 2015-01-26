@@ -4,7 +4,7 @@ Twitter Drill Views
 Base View:
 
 select CAST(t.`id` as BIGINT) as `id`, 
-CAST(t.`timestamp_ms` as BIGINT) as `timestamp`, FROM_UNIXTIME(CAST(t.`timestamp_ms` as BIGINT)/1000, 'Y-MM-D') as `date`, FROM_UNIXTIME(CAST(t.`timestamp_ms` as BIGINT)/1000, 'H:m:s') as `time`,
+CAST(t.`timestamp_ms` as BIGINT) as `timestamp`, FROM_UNIXTIME(CAST(t.`timestamp_ms` as BIGINT)/1000, 'Y-MM-DD’) as `date`, FROM_UNIXTIME(CAST(t.`timestamp_ms` as BIGINT)/1000, 'H:m:s') as `time`,
 CAST(t.`text` as VARCHAR(140)) as `tweet`,
 CAST(t.`favorite_count` as INT) as `favorite_count`,
 CAST(t.`retweet_count` as INT) as `retweet_count`,
