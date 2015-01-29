@@ -66,6 +66,6 @@ CAST(t.retweeted_status.`user`.`screen_name` as VARCHAR(40)) as `screen_name`,
 CAST(t.retweeted_status.`user`.`location` as VARCHAR(80)) as `user_location`,
 CAST(t.retweeted_status.`user`.`followers_count` as INT) as `followers_count`,
 CAST(t.retweeted_status.`user`.`favorites_count` as INT) as `favorites_count`
-from <dfs.source.for.twitter.json.files> t where t.retweeted_status.`user`.`name` is not null;
+from <dfs.source.for.twitter.json.files> t where t.`text` like '%RT_@%';
 
 
