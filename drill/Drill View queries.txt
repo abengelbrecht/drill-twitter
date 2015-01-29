@@ -3,7 +3,11 @@ Twitter Drill Views
 
 Base View:
 New Version
-select CAST(t.`id` as BIGINT) as `id`, 
+select CAST(t.`id` as BIGINT) as `id`,
+CAST(t.dir0 as INT) as dir_year,
+CAST(t.dir1 as INT) as dir_month,
+CAST(t.dir2 as INT) as dir_day,
+CAST(t.dir3 as INT) as dir_hour,
 CAST(t.`timestamp_ms` as BIGINT) as `timestamp`, 
 to_date ((concat (substring(t.`created_at`, 5,6),substring(t.`created_at`, 26,5))), 'MMM dd yyyy') as `date`,
 to_timestamp ((concat (substring(t.`created_at`, 5,6),substring(t.`created_at`, 26,5),substring(t.`created_at`, 11,9))), 'MMM dd yyyy HH:mm:ss') as `datetime`,
@@ -51,7 +55,12 @@ from <dfs.source.for.twitter.json.files> t) as tmp;
 
 Retweeted tweets (see the predicate on the main tweet status to filter out record with no array for retweets)
 
-select CAST(t.retweeted_status.`id` as BIGINT) as `id`, 
+select CAST(t.`id` as BIGINT) as `id`, 
+CAST(t.retweeted_status.`id` as BIGINT) as `retweet_id`,
+CAST(t.dir0 as INT) as dir_year,
+CAST(t.dir1 as INT) as dir_month,
+CAST(t.dir2 as INT) as dir_day,
+CAST(t.dir3 as INT) as dir_hour, 
 CAST(t.retweeted_status.`created_at` as VARCHAR(40)) as `created_at`,
 to_date ((concat (substring(t.retweeted_status.`created_at`, 5,6),substring(t.retweeted_status.`created_at`, 26,5))), 'MMM dd yyyy') as `date`,
 to_timestamp ((concat (substring(t.retweeted_status.`created_at`, 5,6),substring(t.retweeted_status.`created_at`, 26,5),substring(t.retweeted_status.`created_at`, 11,9))), 'MMM dd yyyy HH:mm:ss') as `timestamp`,
