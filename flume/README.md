@@ -12,7 +12,7 @@ Installation and use:
 
 2) Copy flume-sources-twitter-json-0.1.jar from github target to <FLUME_HOME>/lib directory
 
-(wget https://github.com/abengelbrecht/drill-twitter/blob/master/flume/target/flume-sources-twitter-json-0.1.jar)
+(wget wget --no-check-certificate https://github.com/abengelbrecht/drill-twitter/raw/master/flume/target/flume-sources-twitter-json-0.1.jar)
 
 3) See these steps to create a twitter app and get the relevant tokens to use for the twitter flume source configuration (http://iag.me/socialmedia/how-to-create-a-twitter-app-in-8-easy-steps/)
 
