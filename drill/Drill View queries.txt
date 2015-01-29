@@ -2,7 +2,27 @@ Twitter Drill Views
 
 
 Base View:
+New Version
+select CAST(t.`id` as BIGINT) as `id`, 
+CAST(t.`timestamp_ms` as BIGINT) as `timestamp`, 
+to_date ((concat (substring(t.`created_at`, 5,6),substring(t.`created_at`, 26,5))), 'MMM dd yyyy') as `date`,
+to_timestamp ((concat (substring(t.`created_at`, 5,6),substring(t.`created_at`, 26,5),substring(t.`created_at`, 11,9))), 'MMM dd yyyy HH:mm:ss') as `datetime`,
+CAST(t.`text` as VARCHAR(140)) as `tweet`,
+CAST(t.`favorite_count` as INT) as `favorite_count`,
+CAST(t.`retweet_count` as INT) as `retweet_count`,
+CAST(t.`source` as VARCHAR(140)) as `source`,
+CAST(t.`lang` as VARCHAR(10)) as `language`,
+CAST(t.`user`.`id` as BIGINT) as `user_id`,
+CAST(t.`user`.`name` as VARCHAR(40)) as `username`,
+CAST(t.`user`.`screen_name` as VARCHAR(40)) as `screen_name`,
+CAST(t.`user`.`location` as VARCHAR(80)) as `user_location`,
+CAST(t.`user`.`followers_count` as INT) as `followers_count`,
+CAST(t.`user`.`favorites_count` as INT) as `favorites_count`,
+CAST(t.`user`.`friends_count` as INT) as `friends_count`,
+CAST(t.`user`.`statuses_count` as INT) as `statuses_count`
+from <dfs.source.for.twitter.json.files> t;
 
+Old Version
 select CAST(t.`id` as BIGINT) as `id`, 
 CAST(t.`timestamp_ms` as BIGINT) as `timestamp`, FROM_UNIXTIME(CAST(t.`timestamp_ms` as BIGINT)/1000, 'Y-MM-DD’) as `date`, FROM_UNIXTIME(CAST(t.`timestamp_ms` as BIGINT)/1000, 'H:m:s') as `time`,
 CAST(t.`text` as VARCHAR(140)) as `tweet`,
