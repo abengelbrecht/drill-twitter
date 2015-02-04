@@ -4,10 +4,10 @@ Twitter Drill Views
 Base View:
 New Version
 select CAST(t.`id` as BIGINT) as `id`,
-CAST(t.dir0 as INT) as dir_year,
-CAST(t.dir1 as INT) as dir_month,
-CAST(t.dir2 as INT) as dir_day,
-CAST(t.dir3 as INT) as dir_hour,
+t.dir0 as dir_year,
+t.dir1 as dir_month,
+t.dir2 as dir_day,
+t.dir3 as dir_hour, 
 CAST(t.`timestamp_ms` as BIGINT) as `timestamp`, 
 to_date ((concat (substring(t.`created_at`, 5,6),substring(t.`created_at`, 26,5))), 'MMM dd yyyy') as `date`,
 to_timestamp ((concat (substring(t.`created_at`, 5,6),substring(t.`created_at`, 26,5),substring(t.`created_at`, 11,9))), 'MMM dd yyyy HH:mm:ss') as `datetime`,
@@ -47,20 +47,31 @@ from <dfs.source.for.twitter.json.files> t;
 
 Hashtag view (Use flatten to filter out record with no hashtag array)
 
-select CAST(tmp.`id` as BIGINT) as `id`, 
+create or replace view maprfs.views.`tweet_hashtags` as
+select CAST(tmp.`id` as BIGINT) as `id`,
+tmp.dir0 as dir_year,
+tmp.dir1 as dir_month,
+tmp.dir2 as dir_day,
+tmp.dir3 as dir_hour, 
 CAST(tmp.hash.text as VARCHAR(40)) as hashtag
-from (select t.id, flatten(t.entities.hashtags) as hash 
-from <dfs.source.for.twitter.json.files> t) as tmp;
+from 
+(select t.id,
+t.dir0,
+t.dir1,
+t.dir2,
+t.dir3, 
+flatten(t.entities.hashtags) as hash
+from maprfs.twitter_ae.`/nfl` t) as tmp;
 
 
 Retweeted tweets (see the predicate on the main tweet status to filter out record with no array for retweets)
 
 select CAST(t.`id` as BIGINT) as `id`, 
 CAST(t.retweeted_status.`id` as BIGINT) as `retweet_id`,
-CAST(t.dir0 as INT) as dir_year,
-CAST(t.dir1 as INT) as dir_month,
-CAST(t.dir2 as INT) as dir_day,
-CAST(t.dir3 as INT) as dir_hour, 
+t.dir0 as dir_year,
+t.dir1 as dir_month,
+t.dir2 as dir_day,
+t.dir3 as dir_hour, 
 CAST(t.retweeted_status.`created_at` as VARCHAR(40)) as `created_at`,
 to_date ((concat (substring(t.retweeted_status.`created_at`, 5,6),substring(t.retweeted_status.`created_at`, 26,5))), 'MMM dd yyyy') as `date`,
 to_timestamp ((concat (substring(t.retweeted_status.`created_at`, 5,6),substring(t.retweeted_status.`created_at`, 26,5),substring(t.retweeted_status.`created_at`, 11,9))), 'MMM dd yyyy HH:mm:ss') as `timestamp`,
