@@ -48,7 +48,7 @@ from <dfs.source.for.twitter.json.files> t;
 
 Hashtag view (Use flatten to filter out record with no hashtag array)
 
-create or replace view maprfs.views.`tweet_hashtags` as
+create or replace view dfs.views.`tweet_hashtags` as
 select CAST(tmp.`id` as BIGINT) as `id_hash`,
 tmp.dir0 as dir_year_hash,
 tmp.dir1 as dir_month_hash,
@@ -62,7 +62,7 @@ t.dir1,
 t.dir2,
 t.dir3, 
 flatten(t.entities.hashtags) as hash
-from maprfs.twitter_ae.`/nfl` t) as tmp;
+from <dfs.source.for.twitter.json.files> t where t.entities.hashtags[0].text is not null) as tmp;
 
 
 Retweeted tweets (see the predicate on the main tweet status to filter out record with no array for retweets)
