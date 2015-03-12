@@ -9,7 +9,7 @@ to_date ((concat (substring(t.`created_at`, 5,6),substring(t.`created_at`, 26,5)
 to_timestamp ((concat (substring(t.`created_at`, 5,6),substring(t.`created_at`, 26,5),substring(t.`created_at`, 11,9))), 'MMM dd yyyy HH:mm:ss') as `timestamp`,
 to_timestamp ((concat (substring(t.`created_at`, 5,6),substring(t.`created_at`, 26,5),substring(t.`created_at`, 11,6),':00')), 'MMM dd yyyy HH:mm:ss') as `timestamp_min`,
 to_timestamp ((concat (substring(t.`created_at`, 5,6),substring(t.`created_at`, 26,5),substring(t.`created_at`, 11,3),':00:00')), 'MMM dd yyyy HH:mm:ss') as `timestamp_hour`,
-CAST(regexp_replace(t.`text`, '[^\x00-\xad]', '°', '_') as VARCHAR(140)) as `tweet`,
+CAST(regexp_replace(t.`text`, '[^\x00-\xad]', '°') as VARCHAR(140)) as `tweet`,
 CAST(t.`favorite_count` as INT) as `favorite_count_tweet`,
 CAST(t.`retweet_count` as INT) as `retweet_count`,
 CAST(t.`source` as VARCHAR(140)) as `source`,
