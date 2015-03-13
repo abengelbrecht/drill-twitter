@@ -40,8 +40,16 @@ t.dir1,
 t.dir2,
 t.dir3, 
 to_date ((concat (substring(t.`created_at`, 5,6),substring(t.`created_at`, 26,5))), 'MMM dd yyyy') as `date`,
-flatten(t.entities.hashtags) as hash
-from dfs.twitter.`/feed` t where t.entities.hashtags[0].text is not null) as tmp;
+flatten(t.hashtags) as hash
+from 
+(select tag.id,
+tag.dir0,
+tag.dir1,
+tag.dir2,
+tag.dir3, 
+tag.`created_at`,
+tag.entities.hashtags as hashtags
+from dfs.twitter.`/feed` tag where tag.entities.hashtags[0].text is not null) as t) as tmp;
 
 create or replace view dfs.views.retweeted as
 select CAST(t.`id` as BIGINT) as `id_rt`, 
