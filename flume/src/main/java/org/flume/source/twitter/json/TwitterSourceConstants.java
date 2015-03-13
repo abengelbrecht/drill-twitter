@@ -11,4 +11,6 @@ public class TwitterSourceConstants {
   public static final long DEFAULT_BATCH_SIZE = 1000L;
 
   public static final String KEYWORDS_KEY = "keywords";
+  public static final String LANGUAGE_KEY = "languages";
+
 }
